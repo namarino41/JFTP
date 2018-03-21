@@ -1,0 +1,15 @@
+.DS_Store
+.metadata/
+.recommenders/
+Server/bin
+Server/target
+Client/bin
+Client/target
+Server/.classpath
+Server/.project
+Server/.settings/org.eclipse.jdt.core.prefs
+Server/.settings/org.eclipse.m2e.core.prefs
+Client/.classpath
+Client/.project
+Client/.settings/org.eclipse.jdt.core.prefs
+Client/.settings/org.eclipse.m2e.core.prefs
