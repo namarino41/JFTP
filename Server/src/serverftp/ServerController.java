@@ -1,14 +1,14 @@
-package serversideftp;
+package serverftp;
 
 import java.io.File;
 import java.io.IOException;
 
-import serversideftp.remoteconnection.ServerSideFTPRemoteHandler;
+import serverftp.remote.ServerRemoteHandler;
 
-public class ServerSideFTPController {
+public class ServerController {
 	
-	ServerSideFTPRemoteHandler remoteHandler;
-	private ServerSideFTPModel serverSideFTPModel;
+	ServerRemoteHandler remoteHandler;
+	private ServerModel serverSideFTPModel;
 
 	private static final int GET_CODE = 1;
 	private static final int PUSH_CODE = 2;
@@ -18,12 +18,12 @@ public class ServerSideFTPController {
 	private static final int LIST_FILES_DIRECTORIES_CODE = 6;
 	private static final int EXIT_CODE = 0;
 
-	public ServerSideFTPController(ServerSideFTPModel serverSideFTPModel) throws IOException {
+	public ServerController(ServerModel serverSideFTPModel) throws IOException {
 		this.serverSideFTPModel = serverSideFTPModel;
 		
 		while (true) {
 			try {
-				remoteHandler = new ServerSideFTPRemoteHandler();
+				remoteHandler = new ServerRemoteHandler();
 				parseCommand();
 			} catch (IOException e) {
 				e.printStackTrace();

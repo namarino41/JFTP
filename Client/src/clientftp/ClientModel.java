@@ -1,24 +1,23 @@
-package clientsideftp;
+package clientftp;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class ClientSideFTPModel {
+public class ClientModel {
 	
-	private String inetAddress;
+	private String host;
 	private Path homeDirectory;
 	private Path currentDirectory;
 	
-	public ClientSideFTPModel(String inetAddress) { 
-		this.inetAddress = inetAddress;
+	public ClientModel(String inetAddress) { 
+		this.host = inetAddress;
 		homeDirectory = Paths.get(System.getProperty("user.home"));
 		currentDirectory = Paths.get(System.getProperty("user.home"));
-		
 	}
 	
 	public String getInetAddress() {
-		return inetAddress;
+		return host;
 	}
 	
 	public String getCurrentPath() {

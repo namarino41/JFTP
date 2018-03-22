@@ -1,15 +1,14 @@
-package serversideftp;
+package serverftp;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class ServerSideFTPModel {
+public class ServerModel {
 	
 	private Path currentDirectory;
 	
-	
-	public ServerSideFTPModel() {
+	public ServerModel() {
 		currentDirectory = Paths.get(System.getProperty("user.home"));
 		System.out.println(currentDirectory);
 	}

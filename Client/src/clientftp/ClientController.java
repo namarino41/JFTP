@@ -1,4 +1,4 @@
-package clientsideftp;
+package clientftp;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -8,16 +8,16 @@ import java.io.InputStreamReader;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 
-import clientsideftp.remoteconnection.ClientSideFTPRemoteHandler;
+import clientftp.remote.ClientRemoteHandler;
 
-public class ClientSideFTPController {
+public class ClientController {
 
 	SSLSocketFactory sslsocketfactory;
 	SSLSocket sslsocket;
 
-	private ClientSideFTPRemoteHandler remoteHandler;
-	private ClientSideFTPView clientSideFTPView;
-	private ClientSideFTPModel clientSideFTPModel;
+	private ClientRemoteHandler clientremoteHandler;
+	private ClientView clientView;
+	private ClientModel clientModel;
 
 	private static final String LOCAL_LIST_FILES_DIRECTORIES = "lls";
 	private static final String LOCAL_CHANGE_DIRECTORY = "lcd";
@@ -31,12 +31,12 @@ public class ClientSideFTPController {
 	private static final String EXIT = "exit";
 	
 
-	public ClientSideFTPController(ClientSideFTPView clientSideFTPView, ClientSideFTPModel clientSideFTPModel) {
-		this.clientSideFTPView = clientSideFTPView;
-		this.clientSideFTPModel = clientSideFTPModel;
+	public ClientController(ClientView clientSideFTPView, ClientModel clientSideFTPModel) {
+		this.clientView = clientSideFTPView;
+		this.clientModel = clientSideFTPModel;
 		
 		try {
-			this.remoteHandler = new ClientSideFTPRemoteHandler(clientSideFTPModel.getInetAddress());
+			this.clientremoteHandler = new ClientRemoteHandler(clientSideFTPModel.getInetAddress());
 			parseCommand();
 		} catch (IOException e) {
 			//connection failure
@@ -48,7 +48,7 @@ public class ClientSideFTPController {
 
 		while (true) {
 			try {
-				String commandLine[] = clientSideFTPView.getCommandLine(clientSideFTPModel.getCurrentPath(), bufferedReader);
+				String commandLine[] = clientView.getCommandLine(clientModel.getCurrentPath(), bufferedReader);
 				String command = commandLine[0];
 	 
 				switch (command) {
@@ -77,12 +77,12 @@ public class ClientSideFTPController {
 						clear();
 						break;
 					case EXIT:
-						remoteHandler.exit();
+						clientremoteHandler.exit();
 						return;
 					case BLANK:
 						break;
 					default:
-						clientSideFTPView.commandNotFound(command);
+						clientView.commandNotFound(command);
 				}
 			} catch (ArrayIndexOutOfBoundsException e) {
 				System.out.println("err: missing command argument");
@@ -96,31 +96,31 @@ public class ClientSideFTPController {
 	}
 
 	private void localListFilesDirectories() {
-		File localFilesDirectories[] = clientSideFTPModel.getLocalFilesDirectories(null);
-		clientSideFTPView.listFilesDirectories(localFilesDirectories);
+		File localFilesDirectories[] = clientModel.getLocalFilesDirectories(null);
+		clientView.listFilesDirectories(localFilesDirectories);
 	}
 
 	private void localChangeDirectory(String directory) {	
-		boolean success = clientSideFTPModel.changeDirectory(directory);
+		boolean success = clientModel.changeDirectory(directory);
 
 		if (!success)
-			clientSideFTPView.directoryDoesNotExist(directory);
+			clientView.directoryDoesNotExist(directory);
 	}
 	
 	private void remoteChangeDirectory(String directory) throws IOException {
-		boolean success = remoteHandler.changeDirectory(directory);
+		boolean success = clientremoteHandler.changeDirectory(directory);
 		
 		if (!success)
-			clientSideFTPView.directoryDoesNotExist(directory);
+			clientView.directoryDoesNotExist(directory);
 	}
 	
 	private void remotePrintWorkingDirectory() throws IOException {
-		String remoteWorkingDirectory = remoteHandler.printWorkingDirectory();
-		clientSideFTPView.remoteWorkingDirectory(remoteWorkingDirectory);
+		String remoteWorkingDirectory = clientremoteHandler.printWorkingDirectory();
+		clientView.remoteWorkingDirectory(remoteWorkingDirectory);
 	}
 	
 	private void remoteListFilesDirectories() throws ClassNotFoundException, IOException {
-		clientSideFTPView.listFilesDirectories(remoteHandler.listFilesDirectories());
+		clientView.listFilesDirectories(clientremoteHandler.listFilesDirectories());
 	}
 
 	private void getFile(String commandLine[]) throws IOException {
@@ -129,15 +129,15 @@ public class ClientSideFTPController {
 		if (commandLine.length > 1) {
 			for (int i = 1; i < commandLine.length; i++) {
 				fileName = commandLine[i];
-				if (remoteHandler.fileExists(fileName)) {
-					File file = new File(clientSideFTPModel.getCurrentPath() + File.separator + fileName);
-					remoteHandler.getFile(fileName, file, clientSideFTPView);
+				if (clientremoteHandler.fileExists(fileName)) {
+					File file = new File(clientModel.getCurrentPath() + File.separator + fileName);
+					clientremoteHandler.getFile(fileName, file, clientView);
 				} else {
-					clientSideFTPView.fileDoesNotExist(fileName);
+					clientView.fileDoesNotExist(fileName);
 				}
 			}
 		} else {
-			clientSideFTPView.missingFileOperand();
+			clientView.missingFileOperand();
 		}
 	}
 
@@ -147,17 +147,17 @@ public class ClientSideFTPController {
 		if (commandLine.length > 1) {
 			for (int i = 1; i < commandLine.length; i++) {
 				fileName = commandLine[i];
-				if (clientSideFTPModel.fileExists(fileName)) {
-					File file = clientSideFTPModel.getFile(fileName);
-					long fileSize = clientSideFTPModel.getFileSize(file);
+				if (clientModel.fileExists(fileName)) {
+					File file = clientModel.getFile(fileName);
+					long fileSize = clientModel.getFileSize(file);
 					
-					remoteHandler.pushFile(fileName, file, fileSize, clientSideFTPView);
+					clientremoteHandler.pushFile(fileName, file, fileSize, clientView);
 				} else {
-					clientSideFTPView.fileDoesNotExist(fileName);
+					clientView.fileDoesNotExist(fileName);
 				}
 			}
 		} else {
-			clientSideFTPView.missingFileOperand();
+			clientView.missingFileOperand();
 		}
 	}
 

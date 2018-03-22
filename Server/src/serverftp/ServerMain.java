@@ -1,11 +1,11 @@
-package serversideftp;
+package serverftp;
 
 import java.io.IOException;
 
-public class ServerSideFTPMain {
+public class ServerMain {
 	public static void main(String args[]) {
 		try {
-			new ServerSideFTPController(new ServerSideFTPModel());
+			new ServerController(new ServerModel());
 		} catch (IOException exception) {}
 	}
 }

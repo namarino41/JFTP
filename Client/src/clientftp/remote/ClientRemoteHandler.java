@@ -1,4 +1,4 @@
-package clientsideftp.remoteconnection;
+package clientftp.remote;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -15,9 +15,9 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
 
-import clientsideftp.ClientSideFTPView;
+import clientftp.ClientView;
 
-public class ClientSideFTPRemoteHandler {
+public class ClientRemoteHandler {
 	
 	private static final int HOST_PORT = 6000;
 	private static final int TIMEOUT = 5000;
@@ -42,7 +42,7 @@ public class ClientSideFTPRemoteHandler {
 	private BufferedInputStream bufferedFileInputStream;
 	private ObjectInputStream objectInputStream;
 	
-	public ClientSideFTPRemoteHandler(String inetAddress) throws IOException {
+	public ClientRemoteHandler(String inetAddress) throws IOException {
 		initConnection(inetAddress);
 		initStreams();
 	}
@@ -85,7 +85,7 @@ public class ClientSideFTPRemoteHandler {
 		return (File[]) objectInputStream.readObject();
 	}
 	
-	public void getFile(String fileName, File file, ClientSideFTPView clientSideFTPView) throws IOException {
+	public void getFile(String fileName, File file, ClientView clientSideFTPView) throws IOException {
 		dataOutputStream.writeInt(GET_CODE);
 		dataOutputStream.writeUTF(fileName);
 		
@@ -127,7 +127,7 @@ public class ClientSideFTPRemoteHandler {
 		return dataInputStream.readBoolean();
 	}
 	
-	public void pushFile(String fileName, File file, long fileSize, ClientSideFTPView clientSideFTPView) throws IOException {
+	public void pushFile(String fileName, File file, long fileSize, ClientView clientSideFTPView) throws IOException {
 		dataOutputStream.writeInt(PUSH_CODE);
 		dataOutputStream.writeUTF(fileName);
 		

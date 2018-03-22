@@ -1,4 +1,4 @@
-package serversideftp.remoteconnection;
+package serverftp.remote;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -15,7 +15,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 
-public class ServerSideFTPRemoteHandler {
+public class ServerRemoteHandler {
 	private ServerSocket serverSocket;
 	private Socket socket;
 	private InputStream inputStream;
@@ -30,7 +30,7 @@ public class ServerSideFTPRemoteHandler {
 
 	private static final int HOST_PORT = 6000;
 	
-	public ServerSideFTPRemoteHandler() throws IOException {
+	public ServerRemoteHandler() throws IOException {
 		serverSocket = new ServerSocket(HOST_PORT);
 		listen();
 		initStreams();
