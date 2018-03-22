@@ -29,7 +29,6 @@ public class ClientController {
 	private static final String CLEAR = "clear";
 	private static final String BLANK = "";
 	private static final String EXIT = "exit";
-	
 
 	public ClientController(ClientView clientSideFTPView, ClientModel clientSideFTPModel) {
 		this.clientView = clientSideFTPView;
@@ -91,7 +90,6 @@ public class ClientController {
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			}
-			
 		}
 	}
 

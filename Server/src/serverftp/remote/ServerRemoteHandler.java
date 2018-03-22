@@ -17,7 +17,7 @@ import java.net.Socket;
 
 public class ServerRemoteHandler {
 	private ServerSocket serverSocket;
-	private Socket socket;
+	private Socket client;
 	private InputStream inputStream;
 	private OutputStream outputStream;
 	private DataInputStream dataInputStream;
@@ -37,15 +37,15 @@ public class ServerRemoteHandler {
 	}
 	
 	private void listen() throws IOException {
-		socket = serverSocket.accept();
-		System.out.println("Connection established: " + socket.getInetAddress());
+		client = serverSocket.accept();
+		System.out.println("Connection established: " + client.getInetAddress());
 	}
 	
 	private void initStreams() throws IOException {
-		inputStream = socket.getInputStream();
+		inputStream = client.getInputStream();
 		dataInputStream = new DataInputStream(inputStream);
 
-		outputStream = socket.getOutputStream();
+		outputStream = client.getOutputStream();
 		dataOutputStream = new DataOutputStream(outputStream);
 		objectOutputStream = new ObjectOutputStream(outputStream);
 	}
@@ -135,8 +135,8 @@ public class ServerRemoteHandler {
 				dataInputStream.close();
 			if (dataOutputStream != null)
 				dataOutputStream.close();
-			if (socket != null)
-				socket.close();
+			if (client != null)
+				client.close();
 		} catch (IOException | NullPointerException exception) {
 		}
 	}

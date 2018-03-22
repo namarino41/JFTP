@@ -7,8 +7,8 @@ import serverftp.remote.ServerRemoteHandler;
 
 public class ServerController {
 	
-	ServerRemoteHandler remoteHandler;
-	private ServerModel serverSideFTPModel;
+	ServerRemoteHandler serverRemoteHandler;
+	private ServerModel serverModel;
 
 	private static final int GET_CODE = 1;
 	private static final int PUSH_CODE = 2;
@@ -18,12 +18,12 @@ public class ServerController {
 	private static final int LIST_FILES_DIRECTORIES_CODE = 6;
 	private static final int EXIT_CODE = 0;
 
-	public ServerController(ServerModel serverSideFTPModel) throws IOException {
-		this.serverSideFTPModel = serverSideFTPModel;
+	public ServerController(ServerModel serverModel) throws IOException {
+		this.serverModel = serverModel;
 		
 		while (true) {
 			try {
-				remoteHandler = new ServerRemoteHandler();
+				serverRemoteHandler = new ServerRemoteHandler();
 				parseCommand();
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -36,7 +36,7 @@ public class ServerController {
 		
 		try {
 			while (true) {
-				command = remoteHandler.getCommand();
+				command = serverRemoteHandler.getCommand();
 				System.out.println(command);
 				switch (command) {
 					case CHANGE_DIRECTORY_CODE:
@@ -68,41 +68,41 @@ public class ServerController {
 	}
 	
 	private void printWorkingDirectory() throws IOException {
-		remoteHandler.printWorkingDirectory(serverSideFTPModel.getCurrentPath());
+		serverRemoteHandler.printWorkingDirectory(serverModel.getCurrentPath());
 	}
 	
 	private void changeDirectory() throws IOException {
-		String fileName = remoteHandler.getFileName();
-		boolean success = serverSideFTPModel.changeDirectory(fileName);
+		String fileName = serverRemoteHandler.getFileName();
+		boolean success = serverModel.changeDirectory(fileName);
 		
-		remoteHandler.changeDirectory(success);
+		serverRemoteHandler.changeDirectory(success);
 	}
 	
 	private void fileExists() throws IOException {
-		String fileName = remoteHandler.getFileName();
-		remoteHandler.fileExists(serverSideFTPModel.fileExists(fileName));
+		String fileName = serverRemoteHandler.getFileName();
+		serverRemoteHandler.fileExists(serverModel.fileExists(fileName));
 	}
 
 	private void pushFile() throws IOException {
-		File file = serverSideFTPModel.getFile(remoteHandler.getFileName());
-		long fileSize = serverSideFTPModel.getFileSize(file);
+		File file = serverModel.getFile(serverRemoteHandler.getFileName());
+		long fileSize = serverModel.getFileSize(file);
 		
-		remoteHandler.pushFile(file, fileSize);
+		serverRemoteHandler.pushFile(file, fileSize);
 	} 
 
 	private void listFilesDirectories() throws IOException {
-		remoteHandler.listFilesDirectories(serverSideFTPModel.listFilesDirectories());
+		serverRemoteHandler.listFilesDirectories(serverModel.listFilesDirectories());
 		
 	}
 	
 	private void getFile() throws IOException {
-		String fileName = remoteHandler.getFileName();
-		File file = new File(serverSideFTPModel.getCurrentPath() + File.separator + fileName);
+		String fileName = serverRemoteHandler.getFileName();
+		File file = new File(serverModel.getCurrentPath() + File.separator + fileName);
 	
-		remoteHandler.getFile(file);
+		serverRemoteHandler.getFile(file);
 	}
 	
 	private void exit() {
-		remoteHandler.exit();
+		serverRemoteHandler.exit();
 	}
 }

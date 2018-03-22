@@ -14,6 +14,8 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 import clientftp.ClientView;
 
@@ -41,6 +43,8 @@ public class ClientRemoteHandler {
 	private FileInputStream fileInputStream;
 	private BufferedInputStream bufferedFileInputStream;
 	private ObjectInputStream objectInputStream;
+	
+	
 	
 	public ClientRemoteHandler(String inetAddress) throws IOException {
 		initConnection(inetAddress);
