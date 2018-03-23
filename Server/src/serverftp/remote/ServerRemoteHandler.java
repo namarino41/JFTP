@@ -11,12 +11,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.net.ServerSocket;
 import java.net.Socket;
 
 
 public class ServerRemoteHandler {
-	private ServerSocket serverSocket;
 	private Socket client;
 	private InputStream inputStream;
 	private OutputStream outputStream;
@@ -27,18 +25,12 @@ public class ServerRemoteHandler {
 	private FileOutputStream fileOutputStream;
 	private BufferedOutputStream bufferedFileOutputStream;
 	private ObjectOutputStream objectOutputStream;
-
-	private static final int HOST_PORT = 6000;
 	
-	public ServerRemoteHandler() throws IOException {
-		serverSocket = new ServerSocket(HOST_PORT);
-		listen();
-		initStreams();
-	}
 	
-	private void listen() throws IOException {
-		client = serverSocket.accept();
+	public ServerRemoteHandler(Socket client) throws IOException {
+		this.client = client;
 		System.out.println("Connection established: " + client.getInetAddress());
+		initStreams();
 	}
 	
 	private void initStreams() throws IOException {
@@ -125,8 +117,6 @@ public class ServerRemoteHandler {
 	
 	public void exit() {
 		try {
-			if (serverSocket != null) 
-				serverSocket.close();
 			if (inputStream != null)
 				inputStream.close();
 			if (outputStream != null)

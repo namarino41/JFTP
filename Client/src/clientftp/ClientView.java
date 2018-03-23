@@ -56,8 +56,8 @@ public class ClientView {
 			for (File fileDirectory : filesDirectories) {
 				if (!fileDirectory.isHidden()) {
 					if (fileDirectory.isDirectory())
-						// System.out.println("\u001b[34;1m" + fileDirectory.getName() + "\u001B[0m");
-						System.out.println(fileDirectory.getName());
+						System.out.println("\u001b[34;1m" + fileDirectory.getName() + "\u001B[0m");
+						//System.out.println(fileDirectory.getName());
 					else
 						System.out.println(fileDirectory.getName());
 				}

@@ -8,7 +8,8 @@ public class ClientMain {
 			ClientModel clientSideFTPModel = new ClientModel(args[0]);
 			clientSideFTPView.welcome();
 
-			new ClientController(clientSideFTPView, clientSideFTPModel);
+			ClientController clientController = new ClientController(clientSideFTPView, clientSideFTPModel);
+			clientController.start();
 		} catch (ArrayIndexOutOfBoundsException e) {
 			clientSideFTPView.missingHostname();
 		}

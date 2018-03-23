@@ -5,7 +5,8 @@ import java.io.IOException;
 public class ServerMain {
 	public static void main(String args[]) {
 		try {
-			new ServerController(new ServerModel());
+			Server server = new Server(new ServerModel());
+			server.start();
 		} catch (IOException exception) {}
 	}
 }

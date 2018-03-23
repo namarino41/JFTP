@@ -13,7 +13,7 @@ public class ServerModel {
 		System.out.println(currentDirectory);
 	}
 	
-	public String getCurrentPath() {
+	public synchronized String getCurrentDirectory() {
 		return currentDirectory.toString();
 	}
 	

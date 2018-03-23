@@ -33,13 +33,15 @@ public class ClientController {
 	public ClientController(ClientView clientSideFTPView, ClientModel clientSideFTPModel) {
 		this.clientView = clientSideFTPView;
 		this.clientModel = clientSideFTPModel;
-		
 		try {
 			this.clientremoteHandler = new ClientRemoteHandler(clientSideFTPModel.getInetAddress());
-			parseCommand();
 		} catch (IOException e) {
 			//connection failure
 		}
+	}
+	
+	public void start() {
+		parseCommand();
 	}
 
 	private void parseCommand() {

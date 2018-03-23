@@ -13,3 +13,4 @@ Client/.classpath
 Client/.project
 Client/.settings/org.eclipse.jdt.core.prefs
 Client/.settings/org.eclipse.m2e.core.prefs
+build.sh
