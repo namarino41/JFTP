@@ -16,7 +16,7 @@ import java.net.Socket;
 import javax.net.ssl.SSLSocket;
 
 
-public class ServerRemoteHandler {
+public class ServerRemote {
 	private Socket client;
 	private InputStream inputStream;
 	private OutputStream outputStream;
@@ -29,7 +29,7 @@ public class ServerRemoteHandler {
 	private ObjectOutputStream objectOutputStream;
 	
 	
-	public ServerRemoteHandler(Socket client) throws IOException {
+	public ServerRemote(Socket client) throws IOException {
 		this.client = client;
 		System.out.println("Connection established: " + client.getInetAddress());
 		initStreams();

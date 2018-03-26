@@ -6,14 +6,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 
-import clientftp.remote.ClientRemoteHandler;
+import clientftp.remote.ClientRemote;
 
-public class ClientController {
+public class Client {
 
-	private ClientRemoteHandler clientremoteHandler;
 	private ClientView clientView;
 	private ClientModel clientModel;
-
+	private ClientRemote clientremote;
+	
 	private static final String LOCAL_LIST_FILES_DIRECTORIES = "lls";
 	private static final String LOCAL_CHANGE_DIRECTORY = "lcd";
 	private static final String REMOTE_CHANGE_DIRECTORY = "cd";
@@ -25,11 +25,11 @@ public class ClientController {
 	private static final String BLANK = "";
 	private static final String EXIT = "exit";
 
-	public ClientController(ClientView clientSideFTPView, ClientModel clientSideFTPModel) {
+	public Client(ClientView clientSideFTPView, ClientModel clientSideFTPModel) {
 		this.clientView = clientSideFTPView;
 		this.clientModel = clientSideFTPModel;
 		try {
-			this.clientremoteHandler = new ClientRemoteHandler(clientSideFTPModel.getInetAddress());
+			this.clientremote = new ClientRemote(clientSideFTPModel.getInetAddress());
 		} catch (IOException e) {
 			//connection failure
 		}
@@ -73,7 +73,7 @@ public class ClientController {
 						clear();
 						break;
 					case EXIT:
-						clientremoteHandler.exit();
+						clientremote.exit();
 						return;
 					case BLANK:
 						break;
@@ -103,19 +103,19 @@ public class ClientController {
 	}
 	
 	private void remoteChangeDirectory(String directory) throws IOException {
-		boolean success = clientremoteHandler.changeDirectory(directory);
+		boolean success = clientremote.changeDirectory(directory);
 		
 		if (!success)
 			clientView.directoryDoesNotExist(directory);
 	}
 	
 	private void remotePrintWorkingDirectory() throws IOException {
-		String remoteWorkingDirectory = clientremoteHandler.printWorkingDirectory();
+		String remoteWorkingDirectory = clientremote.printWorkingDirectory();
 		clientView.remoteWorkingDirectory(remoteWorkingDirectory);
 	}
 	
 	private void remoteListFilesDirectories() throws ClassNotFoundException, IOException {
-		clientView.listFilesDirectories(clientremoteHandler.listFilesDirectories());
+		clientView.listFilesDirectories(clientremote.listFilesDirectories());
 	}
 
 	private void getFile(String commandLine[]) throws IOException {
@@ -124,9 +124,9 @@ public class ClientController {
 		if (commandLine.length > 1) {
 			for (int i = 1; i < commandLine.length; i++) {
 				fileName = commandLine[i];
-				if (clientremoteHandler.fileExists(fileName)) {
+				if (clientremote.fileExists(fileName)) {
 					File file = new File(clientModel.getCurrentPath() + File.separator + fileName);
-					clientremoteHandler.getFile(fileName, file, clientView);
+					clientremote.getFile(fileName, file, clientView);
 				} else {
 					clientView.fileDoesNotExist(fileName);
 				}
@@ -146,7 +146,7 @@ public class ClientController {
 					File file = clientModel.getFile(fileName);
 					long fileSize = clientModel.getFileSize(file);
 					
-					clientremoteHandler.pushFile(fileName, file, fileSize, clientView);
+					clientremote.pushFile(fileName, file, fileSize, clientView);
 				} else {
 					clientView.fileDoesNotExist(fileName);
 				}

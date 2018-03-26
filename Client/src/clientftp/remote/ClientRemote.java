@@ -22,7 +22,7 @@ import javax.net.ssl.SSLSocketFactory;
 
 import clientftp.ClientView;
 
-public class ClientRemoteHandler {
+public class ClientRemote {
 	
 	private static final int HOST_PORT = 6000;
 	
@@ -46,7 +46,7 @@ public class ClientRemoteHandler {
 	private ObjectInputStream objectInputStream;
 	
 	
-	public ClientRemoteHandler(String inetAddress) throws IOException {
+	public ClientRemote(String inetAddress) throws IOException {
 		initConnection(inetAddress);
 		initStreams();
 	}
