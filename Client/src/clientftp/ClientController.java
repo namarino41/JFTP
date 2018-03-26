@@ -5,15 +5,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import javax.net.ssl.SSLSocket;
-import javax.net.ssl.SSLSocketFactory;
 
 import clientftp.remote.ClientRemoteHandler;
 
 public class ClientController {
-
-	SSLSocketFactory sslsocketfactory;
-	SSLSocket sslsocket;
 
 	private ClientRemoteHandler clientremoteHandler;
 	private ClientView clientView;

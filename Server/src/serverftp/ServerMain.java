@@ -7,6 +7,8 @@ public class ServerMain {
 		try {
 			Server server = new Server(new ServerModel());
 			server.start();
-		} catch (IOException exception) {}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

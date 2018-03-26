@@ -14,15 +14,17 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.security.Provider;
+import java.security.Security;
+
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
 
 import clientftp.ClientView;
 
 public class ClientRemoteHandler {
 	
 	private static final int HOST_PORT = 6000;
-	private static final int TIMEOUT = 5000;
 	
 	private static final int GET_CODE = 1;
 	private static final int PUSH_CODE = 2;
@@ -33,7 +35,6 @@ public class ClientRemoteHandler {
 	private static final int EXIT_CODE = 0;
 	
 	private Socket socket;
-	private SocketAddress socketAddress;
 	private InputStream inputStream;
 	private OutputStream outputStream;
 	private DataInputStream dataInputStream;
@@ -45,20 +46,13 @@ public class ClientRemoteHandler {
 	private ObjectInputStream objectInputStream;
 	
 	
-	
 	public ClientRemoteHandler(String inetAddress) throws IOException {
 		initConnection(inetAddress);
 		initStreams();
 	}
 	
 	private void initConnection(String inetAddress) throws IOException {
-		// sslsocketfactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
-		// sslsocket = (SSLSocket) sslsocketfactory.createSocket(inetAddress,
-		// HOST_PORT);
-
-		socket = new Socket();
-		socketAddress = new InetSocketAddress(inetAddress, HOST_PORT);
-		socket.connect(socketAddress, TIMEOUT);
+		socket = SSLSocketFactory.getDefault().createSocket(inetAddress, HOST_PORT);
 	}
 	
 	private void initStreams() throws IOException {

@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
 
+import javax.net.ssl.SSLSocket;
+
 import serverftp.remote.ServerRemoteHandler;
 
 public class ServerWorker implements Runnable {
@@ -19,7 +21,7 @@ public class ServerWorker implements Runnable {
 	private static final int LIST_FILES_DIRECTORIES_CODE = 6;
 	private static final int EXIT_CODE = 0;
 
-	public ServerWorker(Socket client, ServerModel serverModel) throws IOException {
+	public ServerWorker(SSLSocket client, ServerModel serverModel) throws IOException {
 		this.serverModel = serverModel;
 
 		try {

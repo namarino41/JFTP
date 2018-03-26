@@ -2,7 +2,9 @@ package serverftp;
 
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.net.Socket;
+
+import javax.net.ssl.SSLServerSocketFactory;
+import javax.net.ssl.SSLSocket;
 
 public class Server {
 	private static final int HOST_PORT = 6000;
@@ -10,8 +12,9 @@ public class Server {
 	private ServerSocket serverSocket;
 	private ServerModel serverModel;
 	
+	
 	public Server(ServerModel serverModel) throws IOException {
-		serverSocket = new ServerSocket(HOST_PORT);
+		serverSocket = SSLServerSocketFactory.getDefault().createServerSocket(HOST_PORT);
 		this.serverModel = serverModel;
 	}
 	
@@ -25,7 +28,7 @@ public class Server {
 	
 	private void acceptClients() throws IOException {
 		while (true) {
-			Socket client = serverSocket.accept();
+			SSLSocket client = (SSLSocket) serverSocket.accept();
 			Thread worker = new Thread(new ServerWorker(client, serverModel));
 			worker.start();
 		}
