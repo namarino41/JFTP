@@ -3,6 +3,7 @@ package serverftp;
 import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.net.Socket;
 
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSocket;
@@ -17,7 +18,8 @@ public class Server {
 	private static final int HOST_PORT = 6000;
 	
 	public Server(ServerModel serverModel) throws IOException {
-		serverSocket = SSLServerSocketFactory.getDefault().createServerSocket(HOST_PORT);
+		//serverSocket = SSLServerSocketFactory.getDefault().createServerSocket(HOST_PORT);
+		serverSocket = new ServerSocket(HOST_PORT);
 		this.serverModel = serverModel;
 	}
 	
@@ -31,7 +33,8 @@ public class Server {
 	
 	private void acceptClients() throws IOException {
 		while (true) {
-			SSLSocket client = (SSLSocket) serverSocket.accept();
+			//SSLSocket client = (SSLSocket) serverSocket.accept();
+			Socket client = serverSocket.accept();
 			Thread worker = new Thread(new ServerWorker(client, serverModel));
 			worker.start();
 		}
@@ -50,8 +53,9 @@ public class Server {
 		private static final int FILE_EXISTS_CODE = 5;
 		private static final int LIST_FILES_DIRECTORIES_CODE = 6;
 		private static final int EXIT_CODE = 0;
-
-		public ServerWorker(SSLSocket client, ServerModel serverModel) throws IOException {
+		
+			
+		public ServerWorker(Socket client, ServerModel serverModel) throws IOException {
 			this.serverModel = serverModel;
 
 			try {
@@ -100,7 +104,7 @@ public class Server {
 			serverRemote.printWorkingDirectory(serverModel.getCurrentDirectory());
 		}
 
-		private void changeDirectory() throws IOException {
+		private void changeDirectory() throws IOException {			
 			String fileName = serverRemote.getFileName();
 			boolean success = serverModel.changeDirectory(fileName);
 

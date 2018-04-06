@@ -1,6 +1,8 @@
 package clientftp;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -9,6 +11,7 @@ public class ClientModel {
 	private String host;
 	private Path homeDirectory;
 	private Path currentDirectory;
+	private Path remoteDirectory;
 	
 	public ClientModel(String inetAddress) { 
 		this.host = inetAddress;
@@ -20,8 +23,12 @@ public class ClientModel {
 		return host;
 	}
 	
-	public String getCurrentPath() {
+	public String getCurrentDirectory() {
 		return currentDirectory.toString();
+	}
+	
+	public String getRemoteDirectory() {
+		return remoteDirectory.toString();
 	}
 	
 	public boolean fileExists(String fileName) {
@@ -46,21 +53,46 @@ public class ClientModel {
 		return new File(currentDirectory.toString()).listFiles();
 	}
 	
-	public boolean changeDirectory(String directory) {
-		if (directory == null) {
+	public boolean changeDirectory(String path) throws IOException {
+		if (path == null) {
 			currentDirectory = homeDirectory;
-		} else if (directory.equals("..") && currentDirectory.getParent() != null) {
-			currentDirectory = currentDirectory.getParent();
 			return true;
-		} else if (!directory.equals("..")){
-			String newPath = currentDirectory.toString() + File.separator + directory;
-			File newDirectory = new File(newPath);
-			if (newDirectory.isDirectory()) {
-				currentDirectory = Paths.get(newPath);
-				return true;
-			}
 		}
-		return false;
+			
+		if (path.startsWith("/")) {
+			if (changeDirectoryAbsolutePath(path))
+				return true;
+			else 
+				return false;
+		} else {
+			if (changeDirectoryRelativePath(path)) 
+				return true;
+			else
+				return false;
+		}
 	}
 	
+	private boolean changeDirectoryAbsolutePath(String path) throws IOException {
+		File newDirectory = new File(path);
+		
+		if (newDirectory.isDirectory()) {
+			currentDirectory = Paths.get(newDirectory.getCanonicalPath());
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	
+	private boolean changeDirectoryRelativePath(String path) throws IOException {
+		String newPath = currentDirectory.toString() + File.separator + path;
+		File newDirectory = new File(newPath);
+		
+		if (newDirectory.isDirectory()) {
+			currentDirectory = Paths.get(newDirectory.getCanonicalPath());
+			return true;
+		} else {
+			return false;
+		}
+	}
 }

@@ -52,7 +52,8 @@ public class ClientRemote {
 	}
 	
 	private void initConnection(String inetAddress) throws IOException {
-		socket = SSLSocketFactory.getDefault().createSocket(inetAddress, HOST_PORT);
+		//socket = SSLSocketFactory.getDefault().createSocket(inetAddress, HOST_PORT);
+		socket = new Socket(inetAddress, HOST_PORT);
 	}
 	
 	private void initStreams() throws IOException {

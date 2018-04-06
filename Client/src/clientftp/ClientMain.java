@@ -5,10 +5,10 @@ public class ClientMain {
 		ClientView clientSideFTPView = new ClientView();
 		
 		try {
-			ClientModel clientSideFTPModel = new ClientModel(args[0]);
+			ClientModel clientModel = new ClientModel(args[0]);
 			clientSideFTPView.welcome();
-
-			Client client = new Client(clientSideFTPView, clientSideFTPModel);
+			
+			Client client = new Client(clientSideFTPView, clientModel);
 			client.start();
 		} catch (ArrayIndexOutOfBoundsException e) {
 			clientSideFTPView.missingHostname();
