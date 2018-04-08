@@ -1,24 +1,17 @@
 package serverftp;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class ServerModel {
 	
-	private Path currentDirectory;
-	
 	public ServerModel() {
-		currentDirectory = Paths.get(System.getProperty("user.home"));
-		System.out.println(currentDirectory);
 	}
 	
-	public synchronized String getCurrentDirectory() {
-		return currentDirectory.toString();
-	}
-	
-	public boolean fileExists(String fileName) {
-		File directory = new File(currentDirectory.toString());	
+	public boolean fileExists(String workingDirectory, String fileName) {
+		File directory = new File(workingDirectory);	
 		
 		for (File file : directory.listFiles()) {
 			if (file.getName().equals(fileName))
@@ -27,30 +20,51 @@ public class ServerModel {
 		return false;
 	}
 	
-	public File getFile(String fileName) {
-		return new File(currentDirectory + File.separator + fileName);
+	public File getFile(String workingDirectory, String fileName) {
+		return new File(workingDirectory + File.separator + fileName);
 	}
 	
 	public long getFileSize(File file) {
 		return file.length();
 	}
 	
-	public File[] listDirectoryContents() {		
-		return new File(currentDirectory.toString()).listFiles();
+	public File[] listDirectoryContents(String workingDirectory) {		
+		return new File(workingDirectory).listFiles();
 	}
 	
-	public boolean changeDirectory(String directory) {
-		if (directory.equals("..") && currentDirectory.getParent() != null) {
-			currentDirectory = currentDirectory.getParent();
-			return true;
-		} else if (!directory.equals("..")){
-			String newPath = currentDirectory.toString() + File.separator + directory;
-			File newDirectory = new File(newPath);
-			if (newDirectory.isDirectory()) {
-				currentDirectory = Paths.get(newPath);
-				return true;
-			}
+	public String changeDirectory(String workingDirectory, String directory) throws IOException {			
+		if (directory.startsWith("/")) {
+			String newDirectory = changeDirectoryAbsolutePath(workingDirectory, directory);
+			if (newDirectory != "")
+				return newDirectory;
+			else 
+				return "";
+		} else {
+			String newDirectory = changeDirectoryRelativePath(workingDirectory, directory);
+			if (newDirectory != "") 
+				return newDirectory;
+			else
+				return "";
 		}
-		return false;
+	}
+	
+	private String changeDirectoryAbsolutePath(String workingDirectory, String directory) throws IOException {
+		File newDirectory = new File(directory);
+		
+		if (newDirectory.isDirectory())
+			return newDirectory.getCanonicalPath();
+		else
+			return "";
+	}
+	
+	
+	private String changeDirectoryRelativePath(String workingDirectory, String directory) throws IOException {
+		String newPath = workingDirectory.toString() + File.separator + directory;
+		File newDirectory = new File(newPath);
+		
+		if (newDirectory.isDirectory())
+			return newDirectory.getCanonicalPath();
+		else
+			return "";
 	}
 }

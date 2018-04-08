@@ -44,7 +44,7 @@ public class Client {
 
 		while (true) {
 			try {
-				String commandLine[] = clientView.getCommandLine(clientModel.getCurrentDirectory(), bufferedReader);
+				String commandLine[] = clientView.getCommandLine(clientModel.getLocalWorkingDirectory(), bufferedReader);
 				String request = commandLine[0];
 	 
 				switch (request) {
@@ -102,15 +102,18 @@ public class Client {
 			clientView.directoryDoesNotExist(path);
 	}
 	
-	private void remoteChangeDirectory(String path) throws IOException {
-		boolean success = clientremote.changeDirectory(path);
+	private void remoteChangeDirectory(String directory) throws IOException {
+		String remoteWorkingDirectory = clientModel.getRemoteWorkingDirectory();
+		String newDirectory = clientremote.changeDirectory(remoteWorkingDirectory, directory);
 		
-		if (!success)
-			clientView.directoryDoesNotExist(path);
+		if (!newDirectory.isEmpty())
+			clientModel.setRemoteWorkingDirectory(newDirectory);
+		else
+			clientView.directoryDoesNotExist(directory);
 	}
 	
 	private void remotePrintWorkingDirectory() throws IOException {
-		String remoteWorkingDirectory = clientremote.printWorkingDirectory();
+		String remoteWorkingDirectory = clientModel.getRemoteWorkingDirectory();
 		clientView.remoteWorkingDirectory(remoteWorkingDirectory);
 	}
 	
@@ -125,7 +128,7 @@ public class Client {
 			for (int i = 1; i < commandLine.length; i++) {
 				fileName = commandLine[i];
 				if (clientremote.fileExists(fileName)) {
-					File file = new File(clientModel.getCurrentDirectory() + File.separator + fileName);
+					File file = new File(clientModel.getLocalWorkingDirectory() + File.separator + fileName);
 					clientremote.getFile(fileName, file, clientView);
 				} else {
 					clientView.fileDoesNotExist(fileName);

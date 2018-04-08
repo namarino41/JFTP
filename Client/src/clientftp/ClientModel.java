@@ -10,29 +10,33 @@ public class ClientModel {
 	
 	private String host;
 	private Path homeDirectory;
-	private Path currentDirectory;
-	private Path remoteDirectory;
+	private Path localWorkingDirectory;
+	private Path remoteWorkingDirectory;
 	
 	public ClientModel(String inetAddress) { 
 		this.host = inetAddress;
-		homeDirectory = Paths.get(System.getProperty("user.home"));
-		currentDirectory = Paths.get(System.getProperty("user.home"));
+		localWorkingDirectory = Paths.get(System.getProperty("user.home"));
+		remoteWorkingDirectory = Paths.get(System.getProperty("user.home"));
 	}
 	
 	public String getInetAddress() {
 		return host;
 	}
 	
-	public String getCurrentDirectory() {
-		return currentDirectory.toString();
+	public String getLocalWorkingDirectory() {
+		return localWorkingDirectory.toString();
 	}
 	
-	public String getRemoteDirectory() {
-		return remoteDirectory.toString();
+	public String getRemoteWorkingDirectory() {
+		return remoteWorkingDirectory.toString();
+	}
+	
+	public void setRemoteWorkingDirectory(String directory) {
+		 remoteWorkingDirectory = Paths.get(directory);
 	}
 	
 	public boolean fileExists(String fileName) {
-		File directory = new File(currentDirectory.toString());
+		File directory = new File(localWorkingDirectory.toString());
 		
 		for (File file : directory.listFiles()) {
 			if (file.getName().equals(fileName))
@@ -42,7 +46,7 @@ public class ClientModel {
 	}
 	
 	public File getFile(String fileName) {
-		return new File(currentDirectory + File.separator + fileName);
+		return new File(localWorkingDirectory + File.separator + fileName);
 	}
 	
 	public long getFileSize(File file) {
@@ -50,12 +54,12 @@ public class ClientModel {
 	}
 	
 	public File[] getLocalFilesDirectories(String path) {
-		return new File(currentDirectory.toString()).listFiles();
+		return new File(localWorkingDirectory.toString()).listFiles();
 	}
 	
 	public boolean changeDirectory(String path) throws IOException {
 		if (path == null) {
-			currentDirectory = homeDirectory;
+			localWorkingDirectory = homeDirectory;
 			return true;
 		}
 			
@@ -76,7 +80,7 @@ public class ClientModel {
 		File newDirectory = new File(path);
 		
 		if (newDirectory.isDirectory()) {
-			currentDirectory = Paths.get(newDirectory.getCanonicalPath());
+			localWorkingDirectory = Paths.get(newDirectory.getCanonicalPath());
 			return true;
 		} else {
 			return false;
@@ -85,11 +89,11 @@ public class ClientModel {
 	
 	
 	private boolean changeDirectoryRelativePath(String path) throws IOException {
-		String newPath = currentDirectory.toString() + File.separator + path;
+		String newPath = localWorkingDirectory.toString() + File.separator + path;
 		File newDirectory = new File(newPath);
 		
 		if (newDirectory.isDirectory()) {
-			currentDirectory = Paths.get(newDirectory.getCanonicalPath());
+			localWorkingDirectory = Paths.get(newDirectory.getCanonicalPath());
 			return true;
 		} else {
 			return false;

@@ -44,7 +44,7 @@ public class ServerRemote {
 		objectOutputStream = new ObjectOutputStream(outputStream);
 	}
 	
-	public int getCommand() throws IOException {
+	public int getRequest() throws IOException {
 		return dataInputStream.readInt();
 	}
 	
@@ -52,8 +52,8 @@ public class ServerRemote {
 		dataOutputStream.writeUTF(workingDirectory);
 	}
 	
-	public void changeDirectory(boolean success) throws IOException {
-		dataOutputStream.writeBoolean(success);
+	public void changeDirectory(String directory) throws IOException {
+		dataOutputStream.writeUTF(directory);
 	}
 	
 	public void fileExists(boolean exists) throws IOException {
@@ -61,6 +61,10 @@ public class ServerRemote {
 	}
 	
 	public String getFileName() throws IOException {
+		return dataInputStream.readUTF();
+	}
+	
+	public String getWorkingDirectory() throws IOException {
 		return dataInputStream.readUTF();
 	}
 	

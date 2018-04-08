@@ -29,9 +29,8 @@ public class ClientRemote {
 	private static final int GET_CODE = 1;
 	private static final int PUSH_CODE = 2;
 	private static final int REMOTE_CHANGE_DIRECTORY_CODE = 3;
-	private static final int REMOTE_PRINT_WORKING_DIRECTORY_CODE = 4;
-	private static final int REMOTE_FILE_EXISTS_CODE = 5;
-	private static final int REMOTE_LIST_FILES_DIRECTORIES_CODE = 6;
+	private static final int REMOTE_FILE_EXISTS_CODE = 4;
+	private static final int REMOTE_LIST_FILES_DIRECTORIES_CODE = 5;
 	private static final int EXIT_CODE = 0;
 	
 	private Socket socket;
@@ -65,18 +64,13 @@ public class ClientRemote {
 		dataOutputStream = new DataOutputStream(outputStream);
 	}
 	
-	public boolean changeDirectory(String directory) throws IOException {
+	public String changeDirectory(String workingDirectory, String directory) throws IOException {
 		dataOutputStream.writeInt(REMOTE_CHANGE_DIRECTORY_CODE);
 		
+		dataOutputStream.writeUTF(workingDirectory);
 		dataOutputStream.writeUTF(directory);
-		return dataInputStream.readBoolean();
-	}
-	
-	public String printWorkingDirectory() throws IOException {
-		dataOutputStream.writeInt(REMOTE_PRINT_WORKING_DIRECTORY_CODE);
-		
 		return dataInputStream.readUTF();
-	} 
+	}
 	
 	public File[] listDirectoryContents() throws IOException, ClassNotFoundException {		
 		dataOutputStream.writeInt(REMOTE_LIST_FILES_DIRECTORIES_CODE);

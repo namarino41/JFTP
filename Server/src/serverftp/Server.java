@@ -42,16 +42,14 @@ public class Server {
 	
 	
 	private class ServerWorker implements Runnable {
-
 		private ServerRemote serverRemote;
 		private ServerModel serverModel;
 
 		private static final int GET_CODE = 1;
 		private static final int PUSH_CODE = 2;
 		private static final int CHANGE_DIRECTORY_CODE = 3;
-		private static final int PRINT_WORKING_DIRECTORY_CODE = 4;
-		private static final int FILE_EXISTS_CODE = 5;
-		private static final int LIST_DIRECTORY_CONTENTS_CODE = 6;
+		private static final int FILE_EXISTS_CODE = 4;
+		private static final int LIST_DIRECTORY_CONTENTS_CODE = 5;
 		private static final int EXIT_CODE = 0;
 		
 			
@@ -70,13 +68,10 @@ public class Server {
 
 			try {
 				while (true) {
-					request = serverRemote.getCommand();
+					request = serverRemote.getRequest();
 					switch (request) {
 						case CHANGE_DIRECTORY_CODE:
 							changeDirectory();
-							break;
-						case PRINT_WORKING_DIRECTORY_CODE:
-							printWorkingDirectory();
 							break;
 						case FILE_EXISTS_CODE:
 							fileExists();
@@ -100,15 +95,12 @@ public class Server {
 			}
 		}
 
-		private void printWorkingDirectory() throws IOException {
-			serverRemote.printWorkingDirectory(serverModel.getCurrentDirectory());
-		}
-
-		private void changeDirectory() throws IOException {			
+		private void changeDirectory() throws IOException {	
+			String workingDirectory = serverRemote.getWorkingDirectory();
 			String fileName = serverRemote.getFileName();
-			boolean success = serverModel.changeDirectory(fileName);
+			String newDirectory = serverModel.changeDirectory(workingDirectory, fileName);
 
-			serverRemote.changeDirectory(success);
+			serverRemote.changeDirectory(newDirectory);
 		}
 
 		private void fileExists() throws IOException {
