@@ -14,10 +14,10 @@ public class Client {
 	private ClientModel clientModel;
 	private ClientRemote clientremote;
 	
-	private static final String LOCAL_LIST_FILES_DIRECTORIES = "lls";
+	private static final String LOCAL_LIST_DIRECTORY_CONTENTS = "lls";
 	private static final String LOCAL_CHANGE_DIRECTORY = "lcd";
 	private static final String REMOTE_CHANGE_DIRECTORY = "cd";
-	private static final String REMOTE_LIST_FILES_DIRECTORIES = "ls";
+	private static final String REMOTE_LIST_DIRECTORY_CONTENTS = "ls";
 	private static final String REMOTE_PRINT_WORKING_DIRECTORY = "pwd";
 	private static final String GET = "get";
 	private static final String PUSH = "push";
@@ -36,20 +36,20 @@ public class Client {
 	}
 	
 	public void start() {
-		parseCommand();
+		parseRequest();
 	}
 
-	private void parseCommand() {
+	private void parseRequest() {
 		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
 
 		while (true) {
 			try {
 				String commandLine[] = clientView.getCommandLine(clientModel.getCurrentDirectory(), bufferedReader);
-				String command = commandLine[0];
+				String request = commandLine[0];
 	 
-				switch (command) {
-					case LOCAL_LIST_FILES_DIRECTORIES:
-						localListFilesDirectories();
+				switch (request) {
+					case LOCAL_LIST_DIRECTORY_CONTENTS:
+						listDirectoryContents();
 						break;
 					case LOCAL_CHANGE_DIRECTORY:
 						localChangeDirectory(commandLine[1]);
@@ -60,8 +60,8 @@ public class Client {
 					case REMOTE_PRINT_WORKING_DIRECTORY:
 						remotePrintWorkingDirectory();
 						break;
-					case REMOTE_LIST_FILES_DIRECTORIES:
-						remoteListFilesDirectories();
+					case REMOTE_LIST_DIRECTORY_CONTENTS:
+						remoteListDirectoryContents();
 						break;
 					case GET:
 						getFile(commandLine);
@@ -78,7 +78,7 @@ public class Client {
 					case BLANK:
 						break;
 					default:
-						clientView.commandNotFound(command);
+						clientView.commandNotFound(request);
 				}
 			} catch (ArrayIndexOutOfBoundsException e) {
 				System.out.println("err: missing command argument");
@@ -90,9 +90,9 @@ public class Client {
 		}
 	}
 
-	private void localListFilesDirectories() {
+	private void listDirectoryContents() {
 		File localFilesDirectories[] = clientModel.getLocalFilesDirectories(null);
-		clientView.listFilesDirectories(localFilesDirectories);
+		clientView.listDirectoryContents(localFilesDirectories);
 	}
 
 	private void localChangeDirectory(String path) throws IOException {	
@@ -114,8 +114,8 @@ public class Client {
 		clientView.remoteWorkingDirectory(remoteWorkingDirectory);
 	}
 	
-	private void remoteListFilesDirectories() throws ClassNotFoundException, IOException {
-		clientView.listFilesDirectories(clientremote.listFilesDirectories());
+	private void remoteListDirectoryContents() throws ClassNotFoundException, IOException {
+		clientView.listDirectoryContents(clientremote.listDirectoryContents());
 	}
 
 	private void getFile(String commandLine[]) throws IOException {

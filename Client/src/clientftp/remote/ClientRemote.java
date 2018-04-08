@@ -78,7 +78,7 @@ public class ClientRemote {
 		return dataInputStream.readUTF();
 	} 
 	
-	public File[] listFilesDirectories() throws IOException, ClassNotFoundException {		
+	public File[] listDirectoryContents() throws IOException, ClassNotFoundException {		
 		dataOutputStream.writeInt(REMOTE_LIST_FILES_DIRECTORIES_CODE);
 		
 		return (File[]) objectInputStream.readObject();

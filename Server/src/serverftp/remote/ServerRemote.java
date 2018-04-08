@@ -64,7 +64,7 @@ public class ServerRemote {
 		return dataInputStream.readUTF();
 	}
 	
-	public void listFilesDirectories(File[] filesDirectories) throws IOException {
+	public void listDirectoryContents(File[] filesDirectories) throws IOException {
 		objectOutputStream.writeObject(filesDirectories);
 	}
 	

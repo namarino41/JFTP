@@ -43,7 +43,7 @@ public class ClientView {
 		System.out.println("err: cd: '" + directoryName + "': no such directory");
 	}
 
-	public void listFilesDirectories(File filesDirectories[]) {
+	public void listDirectoryContents(File filesDirectories[]) {
 		if (OS.contains("Windows")) {
 			for (File fileDirectory : filesDirectories) {
 				if (!fileDirectory.isHidden()) {

@@ -51,7 +51,7 @@ public class Server {
 		private static final int CHANGE_DIRECTORY_CODE = 3;
 		private static final int PRINT_WORKING_DIRECTORY_CODE = 4;
 		private static final int FILE_EXISTS_CODE = 5;
-		private static final int LIST_FILES_DIRECTORIES_CODE = 6;
+		private static final int LIST_DIRECTORY_CONTENTS_CODE = 6;
 		private static final int EXIT_CODE = 0;
 		
 			
@@ -65,13 +65,13 @@ public class Server {
 			}
 		}
 
-		private void parseCommand() {
-			int command;
+		private void parseRequest() {
+			int request;
 
 			try {
 				while (true) {
-					command = serverRemote.getCommand();
-					switch (command) {
+					request = serverRemote.getCommand();
+					switch (request) {
 						case CHANGE_DIRECTORY_CODE:
 							changeDirectory();
 							break;
@@ -81,8 +81,8 @@ public class Server {
 						case FILE_EXISTS_CODE:
 							fileExists();
 							break;
-						case LIST_FILES_DIRECTORIES_CODE:
-							listFilesDirectories();
+						case LIST_DIRECTORY_CONTENTS_CODE:
+							listDirectoryContents();
 							break;
 						case GET_CODE:
 							pushFile();
@@ -123,8 +123,8 @@ public class Server {
 			serverRemote.pushFile(file, fileSize);
 		}
 
-		private void listFilesDirectories() throws IOException {
-			serverRemote.listFilesDirectories(serverModel.listFilesDirectories());
+		private void listDirectoryContents() throws IOException {
+			serverRemote.listDirectoryContents(serverModel.listFilesDirectories());
 		}
 
 		private void getFile() throws IOException {
@@ -141,7 +141,7 @@ public class Server {
 		@Override
 		public void run() {
 			while (true) {
-				parseCommand();
+				parseRequest();
 			}
 		}
 	}
