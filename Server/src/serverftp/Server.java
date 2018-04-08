@@ -124,7 +124,7 @@ public class Server {
 		}
 
 		private void listDirectoryContents() throws IOException {
-			serverRemote.listDirectoryContents(serverModel.listFilesDirectories());
+			serverRemote.listDirectoryContents(serverModel.listDirectoryContents());
 		}
 
 		private void getFile() throws IOException {

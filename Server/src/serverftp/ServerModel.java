@@ -35,7 +35,7 @@ public class ServerModel {
 		return file.length();
 	}
 	
-	public File[] listFilesDirectories() {		
+	public File[] listDirectoryContents() {		
 		return new File(currentDirectory.toString()).listFiles();
 	}
 	
