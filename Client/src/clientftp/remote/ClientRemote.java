@@ -72,8 +72,9 @@ public class ClientRemote {
 		return dataInputStream.readUTF();
 	}
 	
-	public File[] listDirectoryContents() throws IOException, ClassNotFoundException {		
+	public File[] listDirectoryContents(String workingDirectory) throws IOException, ClassNotFoundException {		
 		dataOutputStream.writeInt(REMOTE_LIST_FILES_DIRECTORIES_CODE);
+		dataOutputStream.writeUTF(workingDirectory);
 		
 		return (File[]) objectInputStream.readObject();
 	}
@@ -109,8 +110,8 @@ public class ClientRemote {
 			bufferedOutputStream.close();
 			fileOutputStream.close();
 			clientSideFTPView.fileTransferDone();
-		} catch (IOException exception) {
-			System.out.println("something went wrong");
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 	
@@ -120,8 +121,9 @@ public class ClientRemote {
 		return dataInputStream.readBoolean();
 	}
 	
-	public void pushFile(String fileName, File file, long fileSize, ClientView clientSideFTPView) throws IOException {
+	public void pushFile(String workingDirectory, String fileName, File file, long fileSize, ClientView clientSideFTPView) throws IOException {
 		dataOutputStream.writeInt(PUSH_CODE);
+		dataOutputStream.writeUTF(workingDirectory);
 		dataOutputStream.writeUTF(fileName);
 		
 		byte fileDataBuffer[] = new byte[8192];

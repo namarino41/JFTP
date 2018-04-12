@@ -2,26 +2,22 @@ package serverftp;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class ServerModel {
 	
 	public ServerModel() {
 	}
 	
-	public boolean fileExists(String workingDirectory, String fileName) {
-		File directory = new File(workingDirectory);	
-		
-		for (File file : directory.listFiles()) {
-			if (file.getName().equals(fileName))
-				return true;
-		}
-		return false;
+	public boolean fileExists(String fileName) {
+		return new File(fileName).exists();	
 	}
 	
 	public File getFile(String workingDirectory, String fileName) {
 		return new File(workingDirectory + File.separator + fileName);
+	}
+	
+	public File getFile(String fileName) {
+		return new File(fileName);
 	}
 	
 	public long getFileSize(File file) {

@@ -9,7 +9,6 @@ import java.nio.file.Paths;
 public class ClientModel {
 	
 	private String host;
-	private Path homeDirectory;
 	private Path localWorkingDirectory;
 	private Path remoteWorkingDirectory;
 	
@@ -57,12 +56,7 @@ public class ClientModel {
 		return new File(localWorkingDirectory.toString()).listFiles();
 	}
 	
-	public boolean changeDirectory(String path) throws IOException {
-		if (path == null) {
-			localWorkingDirectory = homeDirectory;
-			return true;
-		}
-			
+	public boolean changeDirectory(String path) throws IOException {			
 		if (path.startsWith("/")) {
 			if (changeDirectoryAbsolutePath(path))
 				return true;
@@ -86,7 +80,6 @@ public class ClientModel {
 			return false;
 		}
 	}
-	
 	
 	private boolean changeDirectoryRelativePath(String path) throws IOException {
 		String newPath = localWorkingDirectory.toString() + File.separator + path;

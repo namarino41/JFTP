@@ -12,6 +12,7 @@ import serverftp.remote.ServerRemote;
 
 
 public class Server {
+	
 	private ServerSocket serverSocket;
 	private ServerModel serverModel;
 	
@@ -109,19 +110,24 @@ public class Server {
 		}
 
 		private void pushFile() throws IOException {
-			File file = serverModel.getFile(serverRemote.getFileName());
+			String fileName = serverRemote.getFileName();
+			
+			File file = serverModel.getFile(fileName);
 			long fileSize = serverModel.getFileSize(file);
 
 			serverRemote.pushFile(file, fileSize);
 		}
 
 		private void listDirectoryContents() throws IOException {
-			serverRemote.listDirectoryContents(serverModel.listDirectoryContents());
+			String workingDirectory = serverRemote.getWorkingDirectory();
+			
+			serverRemote.listDirectoryContents(serverModel.listDirectoryContents(workingDirectory));
 		}
 
 		private void getFile() throws IOException {
+			String workingDirectory = serverRemote.getWorkingDirectory();
 			String fileName = serverRemote.getFileName();
-			File file = new File(serverModel.getCurrentDirectory() + File.separator + fileName);
+			File file = new File(workingDirectory + File.separator + fileName);
 
 			serverRemote.getFile(file);
 		}

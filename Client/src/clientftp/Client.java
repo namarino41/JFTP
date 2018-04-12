@@ -12,7 +12,7 @@ public class Client {
 
 	private ClientView clientView;
 	private ClientModel clientModel;
-	private ClientRemote clientremote;
+	private ClientRemote clientRemote;
 	
 	private static final String LOCAL_LIST_DIRECTORY_CONTENTS = "lls";
 	private static final String LOCAL_CHANGE_DIRECTORY = "lcd";
@@ -29,7 +29,7 @@ public class Client {
 		this.clientView = clientSideFTPView;
 		this.clientModel = clientSideFTPModel;
 		try {
-			this.clientremote = new ClientRemote(clientSideFTPModel.getInetAddress());
+			this.clientRemote = new ClientRemote(clientSideFTPModel.getInetAddress());
 		} catch (IOException e) {
 			//connection failure
 		}
@@ -73,7 +73,7 @@ public class Client {
 						clear();
 						break;
 					case EXIT:
-						clientremote.exit();
+						clientRemote.exit();
 						return;
 					case BLANK:
 						break;
@@ -104,7 +104,7 @@ public class Client {
 	
 	private void remoteChangeDirectory(String directory) throws IOException {
 		String remoteWorkingDirectory = clientModel.getRemoteWorkingDirectory();
-		String newDirectory = clientremote.changeDirectory(remoteWorkingDirectory, directory);
+		String newDirectory = clientRemote.changeDirectory(remoteWorkingDirectory, directory);
 		
 		if (!newDirectory.isEmpty())
 			clientModel.setRemoteWorkingDirectory(newDirectory);
@@ -118,7 +118,8 @@ public class Client {
 	}
 	
 	private void remoteListDirectoryContents() throws ClassNotFoundException, IOException {
-		clientView.listDirectoryContents(clientremote.listDirectoryContents());
+		String remoteWorkingDirectory = clientModel.getRemoteWorkingDirectory();
+		clientView.listDirectoryContents(clientRemote.listDirectoryContents(remoteWorkingDirectory));
 	}
 
 	private void getFile(String commandLine[]) throws IOException {
@@ -126,10 +127,10 @@ public class Client {
 
 		if (commandLine.length > 1) {
 			for (int i = 1; i < commandLine.length; i++) {
-				fileName = commandLine[i];
-				if (clientremote.fileExists(fileName)) {
-					File file = new File(clientModel.getLocalWorkingDirectory() + File.separator + fileName);
-					clientremote.getFile(fileName, file, clientView);
+				fileName = clientModel.getRemoteWorkingDirectory() + File.separator + commandLine[i];
+				if (clientRemote.fileExists(fileName)) {
+					File file = new File(clientModel.getLocalWorkingDirectory() + File.separator + commandLine[i]);
+					clientRemote.getFile(fileName, file, clientView);
 				} else {
 					clientView.fileDoesNotExist(fileName);
 				}
@@ -149,7 +150,7 @@ public class Client {
 					File file = clientModel.getFile(fileName);
 					long fileSize = clientModel.getFileSize(file);
 					
-					clientremote.pushFile(fileName, file, fileSize, clientView);
+					clientRemote.pushFile(clientModel.getRemoteWorkingDirectory(), fileName, file, fileSize, clientView);
 				} else {
 					clientView.fileDoesNotExist(fileName);
 				}
